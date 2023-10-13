@@ -2,6 +2,10 @@
 
 which fork from [imlrx/tailwind-nextjs-starter-blog](https://github.com/timlrx/tailwind-nextjs-starter-blog)
 
+## TODO
+
++ lazy load post document
+
 ## Table of Contents
 
 
