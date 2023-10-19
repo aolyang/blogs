@@ -1,15 +1,19 @@
+import type { Metadata } from 'next'
+import type { AnalyticsConfig } from 'pliny/analytics'
+import type { SearchConfig } from 'pliny/search'
+
+import { Inter } from 'next/font/google'
+import { Analytics } from 'pliny/analytics'
+import { SearchProvider } from 'pliny/search'
 import 'css/tailwind.css'
 import 'pliny/search/algolia.css'
 
-import { Inter } from 'next/font/google'
-import { Analytics, AnalyticsConfig } from 'pliny/analytics'
-import { SearchProvider, SearchConfig } from 'pliny/search'
+import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import SectionContainer from '@/components/SectionContainer'
-import Footer from '@/components/Footer'
 import siteMetadata from '@/data/siteMetadata'
+
 import { ThemeProviders } from './theme-providers'
-import { Metadata } from 'next'
 
 const inter = Inter({
     subsets: ['latin'],

@@ -7,7 +7,7 @@ module.exports = {
         node: true,
         es6: true,
     },
-    plugins: ['@typescript-eslint'],
+    plugins: ['simple-import-sort', '@typescript-eslint'],
     extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/eslint-recommended',
@@ -25,6 +25,25 @@ module.exports = {
         'prettier/prettier': 'error',
         'react/react-in-jsx-scope': 'off',
         quotes: ['error', 'single', { avoidEscape: true }],
+        '@typescript-eslint/consistent-type-imports': [
+            'error',
+            {
+                prefer: 'type-imports',
+                disallowTypeAnnotations: false,
+            },
+        ],
+        'simple-import-sort/imports': [
+            'error',
+            {
+                groups: [
+                    ['^@?\\w.*\\u0000$', '^[^.].*\\u0000$', '^\\..*\\u0000$'],
+                    ['^react', '^@?\\w', '^\\u0000'],
+                    ['^'],
+                    ['^\\.'],
+                ],
+            },
+        ],
+        'simple-import-sort/exports': 'error',
         'jsx-a11y/anchor-is-valid': [
             'error',
             {

@@ -1,10 +1,5 @@
-const { withContentlayer } = require('next-contentlayer')
-
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-    enabled: process.env.ANALYZE === 'true',
-})
-
 // You might need to insert additional domains in script-src if you are using external services
+
 const ContentSecurityPolicy = `
   default-src 'self';
   script-src 'self' 'unsafe-eval' 'unsafe-inline' giscus.app analytics.umami.is;
@@ -58,7 +53,12 @@ const securityHeaders = [
  * @type {import('next/dist/next-server/server/config').NextConfig}
  **/
 module.exports = () => {
-    const plugins = [withContentlayer, withBundleAnalyzer]
+    const plugins = [
+        require('next-contentlayer').withContentlayer,
+        require('@next/bundle-analyzer')({
+            enabled: process.env.ANALYZE === 'true',
+        }),
+    ]
     return plugins.reduce((acc, next) => next(acc), {
         reactStrictMode: true,
         pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
@@ -76,7 +76,7 @@ module.exports = () => {
                 },
             ]
         },
-        webpack: (config, options) => {
+        webpack: (config) => {
             config.module.rules.push({
                 test: /\.svg$/,
                 use: ['@svgr/webpack'],

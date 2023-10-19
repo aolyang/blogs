@@ -1,5 +1,6 @@
-import Link from 'next/link'
 import { slug } from 'github-slugger'
+import Link from 'next/link'
+
 import getIcon from '@/components/tag-icons'
 
 interface Props {
