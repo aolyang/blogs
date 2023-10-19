@@ -1,10 +1,10 @@
-import { mkdirSync, writeFileSync } from 'fs'
+import {mkdirSync, writeFileSync} from 'fs'
 import GithubSlugger from 'github-slugger'
 import path from 'path'
-import { escape } from 'pliny/utils/htmlEscaper.js'
+import {escape} from 'pliny/utils/htmlEscaper.js'
 
-import { allBlogs } from '../.contentlayer/generated/index.mjs'
-import tagData from '../app/tag-data.json' assert { type: 'json' }
+import {allBlogs} from '../.contentlayer/generated/index.mjs'
+import tagData from '../app/tag-data.json' assert {type: 'json'}
 import siteMetadata from '../data/siteMetadata.js'
 
 const generateRssItem = (config, post) => `
@@ -19,7 +19,7 @@ const generateRssItem = (config, post) => `
   </item>
 `
 
-const generateRss = (config, posts, page = 'feed.xml') => `
+const _generateRSS = (config, posts, page = 'feed.xml') => `
   <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
       <title>${escape(config.title)}</title>
@@ -39,18 +39,20 @@ async function generateRSS(config, allBlogs, page = 'feed.xml') {
     const publishPosts = allBlogs.filter((post) => post.draft !== true)
     // RSS for blog post
     if (publishPosts.length > 0) {
-        const rss = generateRss(config, publishPosts)
+        const rss = _generateRSS(config, publishPosts)
         writeFileSync(`./public/${page}`, rss)
     }
 
     if (publishPosts.length > 0) {
+        const slugger = new GithubSlugger()
         for (const tag of Object.keys(tagData)) {
-            const filteredPosts = allBlogs.filter((post) =>
-                post.tags.map((t) => GithubSlugger.slug(t)).includes(tag)
-            )
-            const rss = generateRss(config, filteredPosts, `tags/${tag}/${page}`)
+            const filteredPosts = allBlogs.filter((post) => post.tags.map((t) => slugger.slug(t)).includes(tag))
+
+            if (filteredPosts.length === 0) continue
+
+            const rss = _generateRSS(config, filteredPosts, `tags/${tag}/${page}`)
             const rssPath = path.join('public', 'tags', tag)
-            mkdirSync(rssPath, { recursive: true })
+            mkdirSync(rssPath, {recursive: true})
             writeFileSync(path.join(rssPath, page), rss)
         }
     }
