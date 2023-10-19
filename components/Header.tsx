@@ -1,6 +1,5 @@
-import { IconHome } from '@/components/ui-icons'
+import IconHome from '@/assets/home.svg'
 import headerNavLinks from '@/data/headerNavLinks'
-import Logo from '@/data/logo.svg'
 import siteMetadata from '@/data/siteMetadata'
 
 import Link from './Link'
