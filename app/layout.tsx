@@ -6,6 +6,7 @@ import { Inter } from 'next/font/google'
 import { Analytics } from 'pliny/analytics'
 import { SearchProvider } from 'pliny/search'
 import 'css/tailwind.css'
+import 'css/ui.css'
 import 'pliny/search/algolia.css'
 
 import Footer from '@/components/Footer'

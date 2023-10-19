@@ -14,14 +14,12 @@ const Tag = ({ text }: Props) => {
     return (
         <Link
             href={`/tags/${slug(text)}`}
-            className='mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
+            className='mr-3 text-sm font-medium uppercase ui-text-primary'
         >
             <span className='inline-flex items-center gap-1 text-sm'>
                 {config.icon && <config.icon width='20' height='20' />}
                 <span style={{ color: config.color }}>
-                    <span className='inline-block py-1 hover:text-primary-600 dark:hover:text-primary-400'>
-                        {content}
-                    </span>
+                    <span className='inline-block py-1'>{content}</span>
                 </span>
             </span>
         </Link>
