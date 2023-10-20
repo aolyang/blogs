@@ -18,7 +18,7 @@ const MAX_DISPLAY = 5
 
 export default function Home({ posts }) {
     return (
-        <>
+        <main className='h-full mb-auto'>
             <div className='h-full divide-y divide-gray-200 dark:divide-gray-700'>
                 <TimeLineList>
                     <TimelineListItem Icon={null}>
@@ -90,6 +90,6 @@ export default function Home({ posts }) {
             {/*        <NewsletterForm />*/}
             {/*    </div>*/}
             {/*)}*/}
-        </>
+        </main>
     )
 }

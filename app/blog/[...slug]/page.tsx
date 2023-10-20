@@ -80,14 +80,16 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
     const postIndex = sortedCoreContents.findIndex((p) => p.slug === slug)
     if (postIndex === -1) {
         return (
-            <div className='mt-24 text-center'>
-                <PageTitle>
-                    Under Construction{' '}
-                    <span role='img' aria-label='roadwork sign'>
-                        🚧
-                    </span>
-                </PageTitle>
-            </div>
+            <main className='mb-auto'>
+                <div className='mt-24 text-center'>
+                    <PageTitle>
+                        Under Construction{' '}
+                        <span role='img' aria-label='roadwork sign'>
+                            🚧
+                        </span>
+                    </PageTitle>
+                </div>
+            </main>
         )
     }
 
@@ -100,10 +102,10 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
     const Layout = layouts[post.layout || defaultLayout]
 
     return (
-        <>
+        <main className='mb-auto'>
             <Layout content={mainContent} next={next} prev={prev}>
                 <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
             </Layout>
-        </>
+        </main>
     )
 }

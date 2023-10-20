@@ -25,11 +25,13 @@ export default function Page({ params }: { params: { page: string } }) {
     }
 
     return (
-        <ListLayout
-            posts={posts}
-            initialDisplayPosts={initialDisplayPosts}
-            pagination={pagination}
-            title='All Posts'
-        />
+        <main className='mb-auto'>
+            <ListLayout
+                posts={posts}
+                initialDisplayPosts={initialDisplayPosts}
+                pagination={pagination}
+                title='All Posts'
+            />
+        </main>
     )
 }

@@ -41,5 +41,9 @@ export default function TagPage({ params }: { params: { tag: string } }) {
             allBlogs.filter((post) => post.tags && post.tags.map((t) => slug(t)).includes(tag))
         )
     )
-    return <ListLayout posts={filteredPosts} title={title} />
+    return (
+        <main className='mb-auto'>
+            <ListLayout posts={filteredPosts} title={title} />
+        </main>
+    )
 }

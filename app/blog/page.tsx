@@ -21,11 +21,13 @@ export default function BlogPage() {
     }
 
     return (
-        <ListLayout
-            posts={posts}
-            initialDisplayPosts={initialDisplayPosts}
-            pagination={pagination}
-            title='All Posts'
-        />
+        <main className='mb-auto'>
+            <ListLayout
+                posts={posts}
+                initialDisplayPosts={initialDisplayPosts}
+                pagination={pagination}
+                title='All Posts'
+            />
+        </main>
     )
 }
