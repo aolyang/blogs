@@ -95,7 +95,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body className='bg-white text-black antialiased dark:bg-gray-800 dark:text-white'>
                 <ThemeProviders>
                     <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
-                    <SectionContainer>
+                    <section className='mx-auto px-8 max-w-3xl sm:px-6 xl:max-w-2xl xl:px-0'>
                         <div className='flex h-screen flex-col justify-between font-sans'>
                             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
                                 <Header />
@@ -103,7 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                             </SearchProvider>
                             <Footer />
                         </div>
-                    </SectionContainer>
+                    </section>
                 </ThemeProviders>
             </body>
         </html>

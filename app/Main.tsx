@@ -1,11 +1,15 @@
+import type { Blog } from 'contentlayer/generated'
+
 import { formatDate } from 'pliny/utils/formatDate'
 
+import Hi from '@/assets/hi.svg'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import TimeLineList from '@/components/TimelineList'
 import TimelineListArticle from '@/components/TimelineListArticle'
 import TimelineListItem from '@/components/TimelineListItem'
 import siteMetadata from '@/data/siteMetadata'
+
 // import NewsletterForm from 'pliny/ui/NewsletterForm'
 
 const MAX_DISPLAY = 5
@@ -15,12 +19,15 @@ export default function Home({ posts }) {
         <>
             <div className='h-full divide-y divide-gray-200 dark:divide-gray-700'>
                 <TimeLineList>
-                    <TimelineListItem>
-                        <h1 className='text-2xl'>aoly's home</h1>
-                        <p>Hello! welcome to my blog zoom</p>
-                        <p>latest posts here, feel free to comment</p>
+                    <TimelineListItem Icon={null}>
+                        <h1 className='text-2xl'>{new Date().getFullYear()} Latest</h1>
+                        <div className='flex items-center gap-2'>
+                            <Hi />
+                            welcome to my blogs site
+                        </div>
+                        <p className='pl-11'>latest posts here, feel free to comment.</p>
                     </TimelineListItem>
-                    {posts.slice(0, MAX_DISPLAY).map((post) => {
+                    {posts.slice(0, MAX_DISPLAY).map((post: Blog) => {
                         const { slug, date, title, summary, tags } = post
                         return (
                             <TimelineListArticle
@@ -39,24 +46,13 @@ export default function Home({ posts }) {
                                     </time>
                                 }
                             >
-                                <div className='space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0'>
-                                    <div className='space-y-1 xl:col-span-3'>
-                                        <p>{summary}</p>
+                                <div className='space-y-2 xl:items-baseline xl:space-y-0'>
+                                    <p>{summary}</p>
 
-                                        <div className='flex items-center'>
-                                            {tags.map((tag) => (
-                                                <Tag key={tag} text={tag} />
-                                            ))}
-                                        </div>
-                                        {/*<div className='text-base font-medium leading-6'>*/}
-                                        {/*    <Link*/}
-                                        {/*        href={`/blog/${slug}`}*/}
-                                        {/*        className='ui-text-primary'*/}
-                                        {/*        aria-label={`Read "${title}"`}*/}
-                                        {/*    >*/}
-                                        {/*        Read more &rarr;*/}
-                                        {/*    </Link>*/}
-                                        {/*</div>*/}
+                                    <div className='flex items-center'>
+                                        {tags.map((tag) => (
+                                            <Tag key={tag} text={tag} />
+                                        ))}
                                     </div>
                                 </div>
                             </TimelineListArticle>
