@@ -3,11 +3,13 @@ import type { Blog } from 'contentlayer/generated'
 import { formatDate } from 'pliny/utils/formatDate'
 
 import Hi from '@/assets/hi.svg'
+import GithubIcon from '@/assets/social-icons/github.svg'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import TimeLineList from '@/components/TimelineList'
 import TimelineListArticle from '@/components/TimelineListArticle'
 import TimelineListItem from '@/components/TimelineListItem'
+import Button from '@/components/ui/Button'
 import siteMetadata from '@/data/siteMetadata'
 
 // import NewsletterForm from 'pliny/ui/NewsletterForm'
@@ -26,6 +28,18 @@ export default function Home({ posts }) {
                             welcome to my blogs site
                         </div>
                         <p className='pl-11'>latest posts here, feel free to comment.</p>
+                    </TimelineListItem>
+                    <TimelineListItem className={'flex items-center gap-2 px-6 pb-10'} Icon={null}>
+                        <Link href={siteMetadata.github}>
+                            <Button className={'inline-flex gap-2 items-center'}>
+                                follow me on github
+                                <GithubIcon fill='white' width={18} />
+                            </Button>
+                        </Link>
+                        or
+                        <Link href={'/blog'}>
+                            <Button>goto the full list</Button>
+                        </Link>
                     </TimelineListItem>
                     {posts.slice(0, MAX_DISPLAY).map((post: Blog) => {
                         const { slug, date, title, summary, tags } = post

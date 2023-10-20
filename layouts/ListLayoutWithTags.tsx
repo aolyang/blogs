@@ -141,7 +141,7 @@ export default function ListLayoutWithTags({
                                                     </time>
                                                 </dd>
                                             </dl>
-                                            <div>
+                                            <div className='space-y-2'>
                                                 <div>
                                                     <h2 className='text-2xl font-bold leading-8 tracking-tight'>
                                                         <Link
@@ -151,14 +151,14 @@ export default function ListLayoutWithTags({
                                                             {title}
                                                         </Link>
                                                     </h2>
-                                                    <div className='flex flex-wrap'>
-                                                        {tags?.map((tag) => (
-                                                            <Tag key={tag} text={tag} />
-                                                        ))}
+                                                    <div className='prose max-w-none text-gray-500 dark:text-gray-400'>
+                                                        {summary}
                                                     </div>
                                                 </div>
-                                                <div className='prose max-w-none text-gray-500 dark:text-gray-400'>
-                                                    {summary}
+                                                <div className='flex flex-wrap'>
+                                                    {tags?.map((tag) => (
+                                                        <Tag key={tag} text={tag} />
+                                                    ))}
                                                 </div>
                                             </div>
                                         </article>

@@ -50,9 +50,9 @@ export default makeSource({
         const { allBlogs } = await importData()
 
         const tagCount: Record<string, number> = {}
-        const slugger = new GithubSlugger()
         allBlogs.forEach((file) => {
             if (file.tags && (!isProduction || file.draft !== true)) {
+                const slugger = new GithubSlugger()
                 file.tags.forEach((tag) => {
                     const formattedTag = slugger.slug(tag)
                     if (formattedTag in tagCount) {
