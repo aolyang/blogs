@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
+import type { LiHTMLAttributes, ReactNode } from 'react'
 
-type Props = {
+type Props = LiHTMLAttributes<HTMLLIElement> & {
     children: ReactNode
     Icon?: ReactNode
 }
@@ -18,9 +18,9 @@ const defaultCalender = (
         </svg>
     </span>
 )
-export default function TimelineListItem({ children, Icon = defaultCalender }: Props) {
+export default function TimelineListItem({ children, Icon = defaultCalender, ...liAttrs }: Props) {
     return (
-        <li className='mb-6 ml-6'>
+        <li className={'mb-6 ml-6 ' + liAttrs.className || ''} {...liAttrs}>
             {Icon}
             {children}
         </li>

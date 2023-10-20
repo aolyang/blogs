@@ -1,11 +1,15 @@
-import { Facebook, Github, Linkedin, Mail, Mastodon, Twitter, Youtube } from './icons'
+import Facebook from '@/assets/social-icons/facebook.svg'
+import Github from '@/assets/social-icons/github.svg'
+import Mail from '@/assets/social-icons/mail.svg'
+import Mastodon from '@/assets/social-icons/mastodon.svg'
+import Twitter from '@/assets/social-icons/twitter.svg'
+import Youtube from '@/assets/social-icons/youtube.svg'
 
 const components = {
     mail: Mail,
     github: Github,
     facebook: Facebook,
     youtube: Youtube,
-    linkedin: Linkedin,
     twitter: Twitter,
     mastodon: Mastodon,
 }

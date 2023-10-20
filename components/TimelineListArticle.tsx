@@ -14,7 +14,7 @@ export default function TimelineListArticle({ title, subTitle, children }: Props
             <time className='block mb-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500'>
                 {subTitle}
             </time>
-            <p className='text-base font-normal text-gray-500 dark:text-gray-400'>{children}</p>
+            <div className='text-base font-normal text-gray-500 dark:text-gray-400'>{children}</div>
         </TimelineListItem>
     )
 }
