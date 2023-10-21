@@ -26,7 +26,7 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 
 扩展程序的文件结构看起来像这样：
 
-<Image src="/static/images/data-mdx-images/webext-guide/ext-structure.webp" width="500" height="0" />
+![web extension structure](/static/images/data-mdx-images/webext-guide/ext-structure.webp)
 
 ## 从manifest.json 描述文件说起
 
@@ -76,9 +76,10 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 }
 ```
 
-<Image src="/static/images/data-mdx-images/vite-webext-guide/hello-extension.png" width={200} height={0} />
+<img src="/static/images/data-mdx-images/webext-guide/hello-extension.png" width="200" />
 
-### manifest.background
+### manifest.background [doc](https://developer.chrome.com/docs/extensions/mv3/manifest/background)
+
 `background`字段描述了扩展程序的后台行为，是一个常驻的[service worker](https://developer.chrome.com/docs/extensions/mv3/service_workers/#manifest)， 
 定义如何响应浏览器的事件，如浏览器启动、页面加载、网络请求等。
 
@@ -94,7 +95,7 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 }
 ```
 
-### manifest.content_scripts
+### manifest.content_scripts [doc](https://developer.chrome.com/docs/extensions/mv3/content_scripts)
 `content_scripts`字段描述了扩展程序的内容脚本，是一段注入到页面中的脚本，可以（规定什么时候）访问（哪些路由下）页面的DOM，修改页面的内容。
 
 ```json:manifest.json
