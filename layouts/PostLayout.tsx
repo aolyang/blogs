@@ -10,8 +10,8 @@ import SectionContainer from '@/components/SectionContainer'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 
-const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
-const discussUrl = (path) =>
+const editUrl = (path: string) => `${siteMetadata.siteRepo}/blob/main/data/${path}`
+const discussUrl = (path: string) =>
     `https://mobile.twitter.com/search?q=${encodeURIComponent(`${siteMetadata.siteUrl}/${path}`)}`
 
 const postDateTemplate: Intl.DateTimeFormatOptions = {
@@ -33,7 +33,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
     const basePath = path.split('/')[0]
 
     return (
-        <SectionContainer>
+        <>
             <ScrollTopAndComment />
             <article>
                 <div className='xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700'>
@@ -57,9 +57,8 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                             </div>
                         </div>
                     </header>
-                    <div className='grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0'>
-                        <div />
-                        <div className='divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0'>
+                    <div className='divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:relative xl:pl-10 xl:divide-y-0'>
+                        <div className='divide-y divide-gray-200 dark:divide-gray-700 xl:pb-0'>
                             <div className='prose max-w-none pb-8 pt-10 dark:prose-invert'>
                                 {children}
                             </div>
@@ -79,7 +78,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                                 </div>
                             )}
                         </div>
-                        <footer>
+                        <footer className='xl:absolute xl:top-0 xl:left-[-150px] xl:w-[180px]'>
                             <div className='divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y'>
                                 {tags && (
                                     <div className='py-4 xl:py-8'>
@@ -131,6 +130,6 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                     </div>
                 </div>
             </article>
-        </SectionContainer>
+        </>
     )
 }

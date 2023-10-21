@@ -10,16 +10,7 @@ import 'katex/dist/katex.css'
 import { components } from '@/components/MDXComponents'
 import PageTitle from '@/components/PageTitle'
 import siteMetadata from '@/data/siteMetadata'
-import PostBanner from '@/layouts/PostBanner'
 import PostLayout from '@/layouts/PostLayout'
-import PostSimple from '@/layouts/PostSimple'
-
-const defaultLayout = 'PostLayout'
-const layouts = {
-    PostSimple,
-    PostLayout,
-    PostBanner,
-}
 
 export async function generateMetadata({
     params,
@@ -99,13 +90,11 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
 
     const mainContent = coreContent(post)
 
-    const Layout = layouts[post.layout || defaultLayout]
-
     return (
         <main className='mb-auto'>
-            <Layout content={mainContent} next={next} prev={prev}>
+            <PostLayout content={mainContent} next={next} prev={prev}>
                 <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
-            </Layout>
+            </PostLayout>
         </main>
     )
 }
