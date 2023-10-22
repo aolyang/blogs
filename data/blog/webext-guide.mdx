@@ -18,13 +18,13 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 [获取Cookie](https://developer.chrome.com/docs/extensions/reference/cookies),
 [接口代理](https://developer.chrome.com/docs/extensions/reference/proxy) 等...
 
-本文将介绍浏览器扩展程序的主要结构和功能要点。
+本文将介绍浏览器扩展程序的主要结构和功能要点。一些有用的链接将放在文末。
 
 <TOCInline toc={props.toc} exclude="Introduction" toHeading={3} />
 
 # Hello Extensions
 
-扩展程序的文件结构看起来像这样：
+不同类型的程序应该有自己领域独特的架构设计和最佳实践。所以，浏览器扩展程序的文件结构看起来像这样：
 
 ![web extension structure](/static/images/data-mdx-images/webext-guide/ext-structure.webp)
 
@@ -52,11 +52,11 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 }
 ```
 
-`manifest.json`文件中包含一些特殊的属性，这些属性服务于你将要实现的功能：
+`manifest.json`文件中包含一些**特殊的属性**，这些属性服务于你将要实现的功能：
 
 ### manifest.action [doc](https://developer.chrome.com/docs/extensions/reference/action/#manifest)
 
-`action`字段描述了扩展程序在任务栏的行为，如何响应用户的操作。比如点击之后现实的菜单、弹出的页面等。 
+`action`字段描述了扩展程序在任务栏的行为，如何响应用户的操作。比如点击之后现实的菜单、弹出的页面等。
 并且通过全局API [chrome.action](https://developer.chrome.com/docs/extensions/reference/action/#manifest) 进行控制。
 
 ```json:manifest.json
@@ -80,7 +80,8 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 
 ### manifest.background [doc](https://developer.chrome.com/docs/extensions/mv3/manifest/background)
 
-`background`字段描述了扩展程序的后台行为，是一个常驻的[service worker](https://developer.chrome.com/docs/extensions/mv3/service_workers/#manifest)， 
+`background`
+字段描述了扩展程序的后台行为，是一个常驻的[service worker](https://developer.chrome.com/docs/extensions/mv3/service_workers/#manifest)，
 定义如何响应浏览器的事件，如浏览器启动、页面加载、网络请求等。
 
 ```json:manifest.json
@@ -96,6 +97,7 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 ```
 
 ### manifest.content_scripts [doc](https://developer.chrome.com/docs/extensions/mv3/content_scripts)
+
 `content_scripts`字段描述了扩展程序的内容脚本，是一段注入到页面中的脚本，可以（规定什么时候）访问（哪些路由下）页面的DOM，修改页面的内容。
 
 ```json:manifest.json
@@ -117,11 +119,84 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 }
 ```
 
+Chrome扩展程序的[官方文档](https://developer.chrome.com/docs/extensions/mv3/);  
+manifest.json[属性介绍文档](https://developer.chrome.com/docs/extensions/mv3/manifest);  
+Chrome官方示例[demos列表](https://developer.chrome.com/docs/extensions/samples/#search:chrome_url_overrides)
 
+# Let's get started
 
-快速链接：  
-[manifest v3](https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/).  
-[manifest 文件格式含义](https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/)  
-[chrome.action](https://developer.chrome.com/docs/extensions/reference/action/#manifest)
+## npm create chrome-ext
 
-# What is Markdown?
+```bash
+# npm 6.x
+> npm create chrome-ext@latest my-crx-app --template svelte-js
+
+# or npm 7+, extra double-dash is needed:
+> npm create chrome-ext@latest my-crx-app -- --template react-ts
+
+# or yarn
+> yarn create chrome-ext my-crx-app --template vue-ts
+
+# or pnpm
+> pnpm create chrome-ext my-crx-app --template vanilla-ts
+```
+
+使用`tree -L 2`命令查看项目结构：
+
+```python
+> tree -L 2
+├── CHANGELOG.md
+├── LICENSE
+├── README.md
+├── devtools.html # f12 调试控制台页面
+├── newtab.html # 自定义新标签页
+├── options.html # 扩展程序设置页面
+├── package.json
+├── popup.html # 点击扩展图标弹出的页面
+├── public
+│   ├── icons
+│   └── img
+├── sidepanel.html
+├── src # 按各个页面功能和名称划分的代码目录
+│   ├── assets
+│   ├── background
+│   ├── contentScript
+│   ├── devtools
+│   ├── global.d.ts
+│   ├── manifest.ts
+│   ├── newtab
+│   ├── options
+│   ├── popup
+│   └── sidepanel
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+```
+
+## 使用了@crxjs/vite-plugin提升插件开发体验
+
+`@crxjs/vite-plugin`插件读取并转换了`src/manifest.ts`文件，并以manifest中配置的各个newtab、options、popup等页面配置为入口
+自动添加打包配置。  
+虽然配置是灵活的，但一般建议按照默认为最佳实践（如果你想要开源你的插件，并且希望其他人能够快速上手）。官方[plugin concepts](https://crxjs.dev/vite-plugin/concepts/manifest)文档。
+
+```typescript:vite.config.ts {3,4,9}
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { crx } from '@crxjs/vite-plugin'
+import manifest from './manifest.json'
+
+export default defineConfig({
+  plugins: [
+    react(),
+    crx({ manifest }),
+  ],
+})
+```
+
+# 一些有用的链接
+
+1. Chrome扩展程序的官方文档 https://developer.chrome.com/docs/extensions/mv3/;  
+2. manifest.json属性介绍文档 https://developer.chrome.com/docs/extensions/mv3/manifest;  
+3. Chrome官方示例demos列表 https://developer.chrome.com/docs/extensions/samples/#search:chrome_url_overrides;
+4. create-chrome-ext`npm create chrome-ext`github源代码仓库 https://github.com/guocaoyi/create-chrome-ext；
+5. @crxjs/vite-plugin插件文档 https://crxjs.dev/vite-plugin;
