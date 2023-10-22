@@ -2,8 +2,12 @@
     @apply text-primary-700 hover:text-primary-800 dark:text-primary-500 dark:hover:text-primary-400;
 }
 
+
 /* markdown -- */
 .prose h2 {
     margin-top: 0;
 }
 
+.prose .remark-code-title {
+    @apply dark:bg-gray-700;
+}
