@@ -18,7 +18,7 @@ const MAX_DISPLAY = 5
 
 export default function Home({ posts }) {
     return (
-        <main className='h-full mb-auto'>
+        <main className='mb-auto px-4 xl:px-40 '>
             <div className='h-full divide-y divide-gray-200 dark:divide-gray-700'>
                 <TimeLineList>
                     <TimelineListItem Icon={null}>
@@ -29,7 +29,10 @@ export default function Home({ posts }) {
                         </div>
                         <p className='pl-11'>latest posts here, feel free to comment.</p>
                     </TimelineListItem>
-                    <TimelineListItem className={'flex items-center gap-2 px-6 pb-10'} Icon={null}>
+                    <TimelineListItem
+                        className='flex flex-col sm:flex-row sm:items-center gap-2 px-6 pb-10'
+                        Icon={null}
+                    >
                         <Link href={siteMetadata.github}>
                             <Button className={'inline-flex gap-2 items-center'}>
                                 follow me on github
@@ -60,10 +63,10 @@ export default function Home({ posts }) {
                                     </time>
                                 }
                             >
-                                <div className='space-y-2 xl:items-baseline xl:space-y-0'>
+                                <div className='space-y-2 xl:items-baseline'>
                                     <p>{summary}</p>
 
-                                    <div className='flex items-center'>
+                                    <div className='flex items-center flex-wrap'>
                                         {tags.map((tag) => (
                                             <Tag key={tag} text={tag} />
                                         ))}

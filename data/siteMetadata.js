@@ -1,7 +1,7 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
     title: 'share happiness',
-    author: 'Aoly',
+    author: 'Antonio OuYang',
     headerTitle: 'aolyang.me',
     description: "Anto's blog created with Next.js and Tailwind.css",
     language: 'zh-CN',
