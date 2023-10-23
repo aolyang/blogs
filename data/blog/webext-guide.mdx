@@ -32,7 +32,7 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 
 每个扩展程序的根目录都有一个标识自己身份、所需权限和资源信息的文件`manifest.json`
 
-```json:manifest.json
+```json:manifest.json showLineNumbers
 {
   // Required
   "manifest_version": 3, // manifest文件版本，如果不考虑兼容旧版浏览器推荐v3
@@ -46,8 +46,8 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
   "icons": {...},
 
   // Optional
-  "author": "developer@example.com",  
-  
+  "author": "developer@example.com",
+
   // ...
 }
 ```
@@ -59,7 +59,7 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 `action`字段描述了扩展程序在任务栏的行为，如何响应用户的操作。比如点击之后现实的菜单、弹出的页面等。
 并且通过全局API [chrome.action](https://developer.chrome.com/docs/extensions/reference/action/#manifest) 进行控制。
 
-```json:manifest.json
+```json:manifest.json showLineNumbers
 {
   "name": "Action Extension",
   ...
@@ -84,7 +84,7 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 字段描述了扩展程序的后台行为，是一个常驻的[service worker](https://developer.chrome.com/docs/extensions/mv3/service_workers/#manifest)，
 定义如何响应浏览器的事件，如浏览器启动、页面加载、网络请求等。
 
-```json:manifest.json
+```json:manifest.json showLineNumbers
 {
   "name": "Background Extension",
   ...
@@ -100,7 +100,7 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 
 `content_scripts`字段描述了扩展程序的内容脚本，是一段注入到页面中的脚本，可以（规定什么时候）访问（哪些路由下）页面的DOM，修改页面的内容。
 
-```json:manifest.json
+```json:manifest.json showLineNumbers
 {
  "name": "My extension",
  ...
@@ -111,7 +111,7 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
      "js": ["content-script.js"],
      "exclude_matches": ["*://*/*foo*"],
      "include_globs": ["*example.com/???s/*"],
-     "exclude_globs": ["*bar*"],     
+     "exclude_globs": ["*bar*"],
      ...
    }
  ],
@@ -119,8 +119,8 @@ summary: '简要介绍浏览器扩展程序的基本结构，要点，以及想�
 }
 ```
 
-Chrome扩展程序的[官方文档](https://developer.chrome.com/docs/extensions/mv3/);  
-manifest.json[属性介绍文档](https://developer.chrome.com/docs/extensions/mv3/manifest);  
+Chrome扩展程序的[官方文档](https://developer.chrome.com/docs/extensions/mv3/);
+manifest.json[属性介绍文档](https://developer.chrome.com/docs/extensions/mv3/manifest);
 Chrome官方示例[demos列表](https://developer.chrome.com/docs/extensions/samples/#search:chrome_url_overrides)
 
 # Let's get started
@@ -176,10 +176,10 @@ Chrome官方示例[demos列表](https://developer.chrome.com/docs/extensions/sam
 ## 使用了@crxjs/vite-plugin提升插件开发体验
 
 `@crxjs/vite-plugin`插件读取并转换了`src/manifest.ts`文件，并以manifest中配置的各个newtab、options、popup等页面配置为入口
-自动添加打包配置。  
+自动添加打包配置。
 虽然配置是灵活的，但一般建议按照默认为最佳实践（如果你想要开源你的插件，并且希望其他人能够快速上手）。官方[plugin concepts](https://crxjs.dev/vite-plugin/concepts/manifest)文档。
 
-```typescript:vite.config.ts {3,4,9}
+```typescript:vite.config.ts {3,4,9} showLineNumbers
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { crx } from '@crxjs/vite-plugin'
@@ -192,70 +192,14 @@ export default defineConfig({
   ],
 })
 ```
-## 使用webextension-polyfill兼容不同浏览器
 
-[webextension-polyfill](https://github.com/mozilla/webextension-polyfill)是由Mozilla创建的，提供一个尽可能兼容其他浏览器的API，
-相比于在Chrome中使用`chrome.*`API，使用`browser.*`API可以在其他浏览器中运行更加通用。
-
-同时，使用`unplugin-auto-import/vite`使可以全局使用`browser`API。
-
-```bash
-# install webextension-polyfill and types
->pnpm add webextension-polyfill
->pnpm add @types/webextension-polyfill
-
-# npm
->npm install webextension-polyfill
->npm install @types/webextension-polyfill
-
-# yarn ...
->yarn add webextension-polyfill
->yarn add @types/webextension-polyfill
-```
-```ts:vite.config.ts {2,7-15}
-import { defineConfig } from 'vite'
-import autoImport from "unplugin-auto-import/vite"
-
-export default defineConfig({
-  return {
-    plugins: [
-      autoImport({
-        imports: [
-          {
-            'webextension-polyfill': [['*', 'browser']],
-          }
-        ],
-        // 插件会在此生成browser全局api的声明，定要保证include到tsconfig中
-        dts: 'types/browser.d.ts' 
-      })
-    ],
-  }
-})
-```
-注意的是，这个polyfill将原本的callback形式的API转换为Promise形式，所以，需要将`*.vue`文件里原来
-chrome调用方式调整一下，比如Popup.vue中：
-
-```ts:Popup.vue
-/* 原
-    onMounted(() => {
-      browser.storage.sync.get(['count'], (result) => {
-        count.value = result.count ?? 0
-      })
-    })
-*/
-onMounted(async () => {
-  const result = await browser.storage.sync.get(['count'])
-  count.value = result.count ?? 0
-})
-
-```
 
 ## 热更新问题
 
 虽然似乎都跑通了，编辑了界面build中产物确实发生了改变，但是热更新却没有成功生效；右键**检查**扩展程序控制台
 发现热更新链接ws发生了报错，ws的URL报错为**port是undefined**，因此，按照下面更改即可：
 
-```ts:vite.config.ts {10-16}
+```ts:vite.config.ts {10-16} showLineNumbers
 // https://github.com/crxjs/chrome-extension-tools/issues/696#issuecomment-1526138970
 import { defineConfig } from 'vite'
 
@@ -278,16 +222,106 @@ export default defineConfig(({ mode }) => {
 })
 
 ```
-## 使用web-ext cli自动安装扩展
 
+## 使用webextension-polyfill兼容不同浏览器
 
+[webextension-polyfill](https://github.com/mozilla/webextension-polyfill)是由Mozilla创建的，提供一个尽可能兼容其他浏览器的API，
+相比于在Chrome中使用`chrome.*`API，使用`browser.*`API可以在其他浏览器中运行更加通用。
+
+同时，使用`unplugin-auto-import/vite`使可以全局使用`browser`API。
+
+```bash
+# install webextension-polyfill and types
+>pnpm add webextension-polyfill
+>pnpm add @types/webextension-polyfill
+
+# npm
+>npm install webextension-polyfill
+>npm install @types/webextension-polyfill
+
+# yarn ...
+>yarn add webextension-polyfill
+>yarn add @types/webextension-polyfill
+```
+```ts:vite.config.ts {2,7-15} showLineNumbers
+import { defineConfig } from 'vite'
+import autoImport from "unplugin-auto-import/vite"
+
+export default defineConfig({
+  return {
+    plugins: [
+      autoImport({
+        imports: [
+          {
+            'webextension-polyfill': [['*', 'browser']],
+          }
+        ],
+        // 插件会在此生成browser全局api的声明，定要保证include到tsconfig中
+        dts: 'types/browser.d.ts'
+      })
+    ],
+  }
+})
+```
+注意的是，这个polyfill将原本的callback形式的API转换为Promise形式，所以，需要将`*.vue`文件里原来
+chrome调用方式调整一下，比如Popup.vue中：
+
+```ts:Popup.vue showLineNumbers
+/* 原
+    onMounted(() => {
+      browser.storage.sync.get(['count'], (result) => {
+        count.value = result.count ?? 0
+      })
+    })
+*/
+onMounted(async () => {
+  const result = await browser.storage.sync.get(['count'])
+  count.value = result.count ?? 0
+})
+
+```
+
+## 为什么firefox和chrome的manifest.json配置不一样？
+
+很烦，由于两个浏览器的配置文件不太一样，在默认输出chrome的manifest文件后，若需要打包firefox的扩展，则需要创建一个脚本
+将chrome和firefox中功能相同，但是配置不同的地方做一次转换。
+
+先安装一个可以直接执行ts文件的工具[esno](https://github.com/esbuild-kit/esno#readme), why? 基于go编写（esbuild），编译快，自带esm、tsx支持，不依赖package.json。
+脚本在`scripts/manifest-rewrite.ts`中，执行`esno scripts/manifest-rewrite.ts`即可（看package.json）。
+
+```ts:scripts/manifest-rewrite.ts {2,9,15,16} showLineNumbers
+// chrome build default, so currently default firefox is true
+const isFirefox = true // process.env.EXTENSION === "firefox"
+
+const { background, side_panel, ...commons } = manifest
+const firfoxManifest = {
+    ...commons,
+    background:
+        // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background
+        isFirefox
+            ? {
+                scripts: [background.service_worker],
+                type: background.type
+            }
+            : background,
+    [isFirefox ? "sidebar_action" : "side_panel"]:
+        isFirefox
+            ? {
+                default_panel: side_panel.default_path
+            }
+            : side_panel
+    // options_page is deprecated in firefox v3, but still works
+}
+```
 
 # 一些有用的链接
 
-1. Chrome扩展程序的官方文档 https://developer.chrome.com/docs/extensions/mv3/;  
-2. manifest.json属性介绍文档 https://developer.chrome.com/docs/extensions/mv3/manifest;  
-3. Chrome官方示例demos列表 https://developer.chrome.com/docs/extensions/samples/#search:chrome_url_overrides;
-4. create-chrome-ext`npm create chrome-ext`github源代码仓库 https://github.com/guocaoyi/create-chrome-ext；
-5. @crxjs/vite-plugin插件文档 https://crxjs.dev/vite-plugin;
-6. @crxjs/vite-plugin插件源代码仓库 https://github.com/crxjs/chrome-extension-tools;
+1. Chrome扩展程序的官方文档 https://developer.chrome.com/docs/extensions/mv3/;
+2. manifest.json属性介绍文档 https://developer.chrome.com/docs/extensions/mv3/manifest;
+3. firefox manifest.json属性key介绍 https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json
+4. Chrome官方示例demos列表 https://developer.chrome.com/docs/extensions/samples/#search:chrome_url_overrides;
+5. create-chrome-ext`npm create chrome-ext`github源代码仓库 https://github.com/guocaoyi/create-chrome-ext；
+6. @crxjs/vite-plugin插件文档 https://crxjs.dev/vite-plugin;
+7. @crxjs/vite-plugin插件源代码仓库 https://github.com/crxjs/chrome-extension-tools;
+8. esno源代码仓库 https://github.com/esbuild-kit/esno#readme
 
