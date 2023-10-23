@@ -192,6 +192,95 @@ export default defineConfig({
   ],
 })
 ```
+## 使用webextension-polyfill兼容不同浏览器
+
+[webextension-polyfill](https://github.com/mozilla/webextension-polyfill)是由Mozilla创建的，提供一个尽可能兼容其他浏览器的API，
+相比于在Chrome中使用`chrome.*`API，使用`browser.*`API可以在其他浏览器中运行更加通用。
+
+同时，使用`unplugin-auto-import/vite`使可以全局使用`browser`API。
+
+```bash
+# install webextension-polyfill and types
+>pnpm add webextension-polyfill
+>pnpm add @types/webextension-polyfill
+
+# npm
+>npm install webextension-polyfill
+>npm install @types/webextension-polyfill
+
+# yarn ...
+>yarn add webextension-polyfill
+>yarn add @types/webextension-polyfill
+```
+```ts:vite.config.ts {2,7-15}
+import { defineConfig } from 'vite'
+import autoImport from "unplugin-auto-import/vite"
+
+export default defineConfig({
+  return {
+    plugins: [
+      autoImport({
+        imports: [
+          {
+            'webextension-polyfill': [['*', 'browser']],
+          }
+        ],
+        // 插件会在此生成browser全局api的声明，定要保证include到tsconfig中
+        dts: 'types/browser.d.ts' 
+      })
+    ],
+  }
+})
+```
+注意的是，这个polyfill将原本的callback形式的API转换为Promise形式，所以，需要将`*.vue`文件里原来
+chrome调用方式调整一下，比如Popup.vue中：
+
+```ts:Popup.vue
+/* 原
+    onMounted(() => {
+      browser.storage.sync.get(['count'], (result) => {
+        count.value = result.count ?? 0
+      })
+    })
+*/
+onMounted(async () => {
+  const result = await browser.storage.sync.get(['count'])
+  count.value = result.count ?? 0
+})
+
+```
+
+## 热更新问题
+
+虽然似乎都跑通了，编辑了界面build中产物确实发生了改变，但是热更新却没有成功生效；右键**检查**扩展程序控制台
+发现热更新链接ws发生了报错，ws的URL报错为**port是undefined**，因此，按照下面更改即可：
+
+```ts:vite.config.ts {10-16}
+// https://github.com/crxjs/chrome-extension-tools/issues/696#issuecomment-1526138970
+import { defineConfig } from 'vite'
+
+// https://vitejs.dev/config/
+export default defineConfig(({ mode }) => {
+  // specifiy server config, because vite^4.3 bug:
+  // https://github.com/crxjs/chrome-extension-tools/issues/696
+  // https://github.com/crxjs/chrome-extension-tools/issues/693
+  return {
+    server: {
+      port: 5173,
+      strictPort: true,
+      hmr: {
+        port: 5173,
+      }
+    },
+    build: {
+      // ...
+    }
+})
+
+```
+## 使用web-ext cli自动安装扩展
+
+
 
 # 一些有用的链接
 
@@ -200,3 +289,5 @@ export default defineConfig({
 3. Chrome官方示例demos列表 https://developer.chrome.com/docs/extensions/samples/#search:chrome_url_overrides;
 4. create-chrome-ext`npm create chrome-ext`github源代码仓库 https://github.com/guocaoyi/create-chrome-ext；
 5. @crxjs/vite-plugin插件文档 https://crxjs.dev/vite-plugin;
+6. @crxjs/vite-plugin插件源代码仓库 https://github.com/crxjs/chrome-extension-tools;
+
