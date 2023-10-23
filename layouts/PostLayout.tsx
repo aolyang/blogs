@@ -33,6 +33,13 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
     const { filePath, path, slug, date, title, tags } = content
     const basePath = path.split('/')[0]
 
+    const readingTime = content.readingTime as {
+        text: string
+        minutes: number
+        time: number
+        words: number
+    }
+
     return (
         <SectionContainer>
             <ScrollTopAndComment />
@@ -55,11 +62,14 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                             </dl>
                             <div>
                                 <PageTitle>{title}</PageTitle>
+                                <p className='pt-2'>
+                                    words: {readingTime.words}, need {readingTime.text}
+                                </p>
                             </div>
                         </div>
                     </header>
                     <div className='grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0'>
-                        <dl className='pb-10 pt-6 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700'>
+                        <dl className='pb-6 pt-3 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700'>
                             <dt className='sr-only'>Authors</dt>
                             <dd>
                                 <ul className='flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8'>
